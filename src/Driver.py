@@ -1,13 +1,12 @@
 import os
-import networkx as nx
-import numpy as np
 from pathlib import Path as Data_Path
 
-from JSONFile import JSONFile
-
+import networkx as nx
+import numpy as np
 import torch
 from torch_geometric.data import Data
 
+from JSONFile import JSONFile
 
 PROJ_DIR="/Users/robel/Documents/GMU/CS782/Project/"
 os.chdir(PROJ_DIR)
