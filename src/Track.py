@@ -1,13 +1,3 @@
-"""
-Here we define classes for the data that we are going to load. The data is stored in JSON files, each
-which contain playlists, which themselves contain tracks. Thus, we define three classes:
-  Track       --> contains information for a specific track (its id, name, etc.)
-  Playlist    --> contains information for a specific playlist (its id, name, etc. as well as a list of Tracks)
-  JSONFile    --> contains the loaded json file and stores a dictionary of all of the Playlists
-
-Note: if we were to use the artist information, we could make an Artist class
-"""
-
 class Track:
   """
   Simple class for a track, containing its attributes:
