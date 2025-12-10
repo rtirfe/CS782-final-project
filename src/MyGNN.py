@@ -10,7 +10,6 @@ from torch.nn.functional import logsigmoid
 class MyGNN(torch.nn.Module):
 
     def __init__(self, 
-                 num_nodes, 
                  embedding_dim, 
                  num_layers,
                  **kwargs):
@@ -25,12 +24,6 @@ class MyGNN(torch.nn.Module):
             convs.append(SAGEConv(in_channels=embedding_dim, out_channels=embedding_dim, **kwargs))
         self.convs = ModuleList(convs)
 
-
-        # self.convs = ModuleList(
-        #     [
-        #         SAGEConv(in_channels = embedding_dim, out_channels = embedding_dim, **kwargs) for _ in range(num_layers)
-        #     ]
-        # )
         self.reset_parameters()
 
         alpha = 1. / (num_layers + 1)
@@ -41,14 +34,12 @@ class MyGNN(torch.nn.Module):
 
         self.register_buffer('alpha', alpha)
 
-        # self.embedding = Embedding(num_nodes, embedding_dim)
 
     def reset_parameters(self):
         for conv in self.convs:
             conv.reset_parameters()
 
     def get_embedding(self, x: Tensor, edge_index: Adj) -> Tensor:
-        # x = self.embedding.weight
 
         weights = self.alpha.softmax(dim=-1)
         x = self.convs[0](x, edge_index)
@@ -59,11 +50,6 @@ class MyGNN(torch.nn.Module):
             out = out + x * weights[i + 1]
 
         return out
-
-    # def initialize_embeddings(self, graph_data):
-      # initialize with the data node features
-        # self.embedding.weight.data.copy_(graph_data.node_feature) #Original
-        # self.embedding.weight.data.copy_(graph_data.x)
 
     def forward(self, x: Tensor, edge_index: Adj,
                 edge_label_index: OptTensor = None) -> Tensor:

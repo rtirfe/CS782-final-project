@@ -117,9 +117,9 @@ train_split, val_split, test_split = transform(graph_data)
 
 # Edge index: message passing edges
 train_split.edge_index = train_split.edge_index.type(torch.int64)
-
 val_split.edge_index = val_split.edge_index.type(torch.int64)
 test_split.edge_index = test_split.edge_index.type(torch.int64)
+
 # Edge label index: supervision edges
 train_split.edge_label_index = train_split.edge_label_index.type(torch.int64)
 val_split.edge_label_index = val_split.edge_label_index.type(torch.int64)
@@ -162,6 +162,7 @@ def train(datasets, model, optimizer, args):
     # calculate embedding
     embed = model.get_embedding(train_data.x, train_data.edge_index)
     # calculate pos, negative scores using embedding
+    print("x has NaN:", torch.isnan(train_data.x).any())
     pos_scores = model.predict_link_embedding(embed, train_data.edge_label_index)
     neg_scores = model.predict_link_embedding(embed, neg_edge_index)
 
@@ -171,9 +172,7 @@ def train(datasets, model, optimizer, args):
     loss.backward()
     optimizer.step()
 
-    val_loss, val_neg_edge = test(
-        model=model, data=val_data, neg_edge_index=val_neg_edge
-    )
+    val_loss, val_neg_edge = test( model=model, data=val_data, neg_edge_index=val_neg_edge)
 
     print(f"Epoch {epoch}; Train loss {loss}; Val loss {val_loss}")
 
@@ -308,7 +307,6 @@ args = {
 # initialize model and and optimizer
 num_nodes = n_playlists + n_tracks
 model = MyGNN(
-    num_nodes = num_nodes, 
     num_layers = args['num_layers'],
     embedding_dim = args['emb_size'], 
 )
