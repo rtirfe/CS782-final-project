@@ -207,7 +207,7 @@ def test(model, data, neg_edge_index = None):
 
 def recall_at_k(data, model, k = 300, batch_size = 64, device = None):
     with torch.no_grad():
-        embeddings = model.get_embedding(data.edge_index)
+        embeddings = model.get_embedding(data.x, data.edge_index)
         playlists_embeddings = embeddings[:n_playlists]
         tracks_embeddings = embeddings[n_playlists:]
 

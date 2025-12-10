@@ -2,7 +2,7 @@ import torch
 
 from torch import Tensor
 from torch_geometric.typing import Adj, OptTensor, SparseTensor
-from torch_geometric.nn.conv import SAGEConv
+from torch_geometric.nn.conv import SAGEConv, GATConv
 from torch.nn import ModuleList, Embedding
 from torch.nn.modules.loss import _Loss
 from torch.nn.functional import logsigmoid
@@ -20,7 +20,7 @@ class MyGNN(torch.nn.Module):
         self.num_layers = num_layers
 
         convs = []
-        convs.append(SAGEConv(in_channels=11, out_channels=embedding_dim, **kwargs))
+        convs.append(GATConv(in_channels=11, out_channels=embedding_dim, **kwargs))
         for _ in range(num_layers-1):
             convs.append(SAGEConv(in_channels=embedding_dim, out_channels=embedding_dim, **kwargs))
         self.convs = ModuleList(convs)
